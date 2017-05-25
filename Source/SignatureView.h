@@ -26,6 +26,7 @@
 
 - (UIImage *)signatureImage;
 - (NSData *)signatureData;
+- (NSString *)signatureSvg;
 
 - (BOOL)isSigned;
 

@@ -74,14 +74,14 @@
 }
 
 - (void)clear {
-    self.blank = YES;
-    [self.svgPath setString:@""];
-
     [self clearWithColor:[UIColor whiteColor]];
     [self clearWithColor:[UIColor clearColor]];
 }
 
 - (void)clearWithColor:(UIColor *)color {
+    self.blank = YES;
+    [self.svgPath setString:@""];
+
     CGSize screenSize = self.frame.size;
     
     UIGraphicsBeginImageContext(screenSize);

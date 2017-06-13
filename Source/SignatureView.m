@@ -120,32 +120,29 @@
     int r = 0;
     int g = 0;
     int b = 0;
-    int a = 255;
     
     if (colorSpace == kCGColorSpaceModelMonochrome) {
         r = (int)(colorComponents[0] * 255);
         g = (int)(colorComponents[0] * 255);
         b = (int)(colorComponents[0] * 255);
-        a = (int)(colorComponents[1] * 255);
     }
     else if (colorSpace == kCGColorSpaceModelRGB) {
         r = (int)(colorComponents[0] * 255);
         g = (int)(colorComponents[1] * 255);
         b = (int)(colorComponents[2] * 255);
-        a = (int)(colorComponents[3] * 255);
     }
     
     NSString* svgAsString = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n"
                              @"<svg  xmlns=\"http://www.w3.org/2000/svg\" viewport-fill=\"none\" viewBox=\"0, 0, %u, %u\" version=\"1.1\" height=\"%u\" width=\"%u\" >\n"
-                             @" <path fill=\"none\" stroke=\"#%02X%02X%02X%02X\" stroke-width=\"%u\" d=\"%@\" />\n"
+                             @" <path fill=\"none\" stroke=\"#%02X%02X%02X\" stroke-width=\"%u\" d=\"%@\" />\n"
                              @"</svg>",
                              width,
                              height,
                              height,
                              width,
-                             r, g, b, a,
+                             r, g, b,
                              strokeWidth,
-                             self.svgPath
+                             [self.svgPath stringByTrimmingCharactersInSet: NSCharacterSet.whitespaceCharacterSet]
                              ];
     return svgAsString;
 }
@@ -252,11 +249,11 @@
     NSInteger count = [points count];
     CGPoint point = [[points objectAtIndex:0] CGPointValue];
 	CGContextMoveToPoint(context, point.x, point.y);
-    [self.svgPath appendFormat:@"M%.1lf %.1lf", point.x, point.y];
+    [self.svgPath appendFormat:@" M%.1lf %.1lf", point.x, point.y];
     for(int i = 1; i < count; i++) {
         point = [[points objectAtIndex:i] CGPointValue];
         CGContextAddLineToPoint(context, point.x, point.y);
-        [self.svgPath appendFormat:@"L%.1lf %.1lf", point.x, point.y];
+        [self.svgPath appendFormat:@" L%.1lf %.1lf", point.x, point.y];
     }
     CGContextStrokePath(context);
     

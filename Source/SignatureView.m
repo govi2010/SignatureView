@@ -77,6 +77,15 @@
     self.backgroundColor = backgroundColor;
 }
 
+- (void)setBackgroundImage:(UIImage *)backgroundImage{
+    UIGraphicsBeginImageContext(self.frame.size);
+    [backgroundImage drawInRect:self.bounds];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    [self setBackgroundColor:[UIColor colorWithPatternImage:image]];
+//    self.backgroundColor = backgroundImage;
+}
+
 - (void)clear {
     [self clearWithColor:[UIColor whiteColor]];
     [self clearWithColor:[UIColor clearColor]];

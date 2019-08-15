@@ -21,6 +21,7 @@
 - (void)setLineColor:(UIColor *)color;
 - (void)setLineWidth:(CGFloat)width;
 - (void)setBackgroundColor:(UIColor *)backgroundColor;
+- (void)setBackgroundImage:(UIImage *)backgroundImage;
 
 - (void)clear;
 - (void)clearWithColor:(UIColor *)color;

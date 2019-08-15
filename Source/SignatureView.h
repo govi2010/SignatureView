@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UIColor *foregroundLineColor;
 @property (nonatomic, strong) UIColor *backgroundLineColor;
+@property (nonatomic, strong) UIImage *backGroundImage;
 
 @property (nonatomic, assign) CGFloat foregroundLineWidth;
 @property (nonatomic, assign) CGFloat backgroundLineWidth;

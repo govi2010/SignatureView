@@ -14,6 +14,7 @@
 @property (nonatomic, assign) CGPoint previousPoint;
 @property (nonatomic, strong) UIImage *tempImage;
 
+
 @property (nonatomic, assign) BOOL blank;
 
 @property (nonatomic, retain) NSMutableString *svgPath;
@@ -78,12 +79,12 @@
 }
 
 - (void)setBackgroundImage:(UIImage *)backgroundImage{
+    self.backGroundImage = backgroundImage;
     UIGraphicsBeginImageContext(self.frame.size);
     [backgroundImage drawInRect:self.bounds];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    [self setBackgroundColor:[UIColor colorWithPatternImage:image]];
-//    self.backgroundColor = backgroundImage;
+    self.image = image;//[UIColor colorWithPatternImage:image];
 }
 
 - (void)clear {
@@ -94,20 +95,14 @@
 - (void)clearWithColor:(UIColor *)color {
     self.blank = YES;
     [self.svgPath setString:@""];
-
     CGSize screenSize = self.frame.size;
-    
     UIGraphicsBeginImageContext(screenSize);
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     [self.image drawInRect:CGRectMake(0, 0, screenSize.width, screenSize.height)];
-    
     CGContextSetFillColorWithColor(context, color.CGColor);
     CGContextFillRect(context, CGRectMake(0, 0, screenSize.width, screenSize.height));
-    
     UIImage *cleanImage = UIGraphicsGetImageFromCurrentImageContext();
     self.image = cleanImage;
-    
     UIGraphicsEndImageContext();
 }
 
@@ -127,13 +122,11 @@
     const unsigned width = (unsigned)self.bounds.size.width;
     const unsigned height = (unsigned)self.bounds.size.height;
     const unsigned strokeWidth = (unsigned)self.backgroundLineWidth;
-    
     const CGColorSpaceModel colorSpace = CGColorSpaceGetModel(CGColorGetColorSpace(self.backgroundLineColor.CGColor));
     const CGFloat *colorComponents = CGColorGetComponents(self.backgroundLineColor.CGColor);
     int r = 0;
     int g = 0;
     int b = 0;
-    
     if (colorSpace == kCGColorSpaceModelMonochrome) {
         r = (int)(colorComponents[0] * 255);
         g = (int)(colorComponents[0] * 255);
@@ -144,7 +137,6 @@
         g = (int)(colorComponents[1] * 255);
         b = (int)(colorComponents[2] * 255);
     }
-    
     NSString* svgAsString = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n"
                              @"<svg  xmlns=\"http://www.w3.org/2000/svg\" viewport-fill=\"none\" viewBox=\"0, 0, %u, %u\" version=\"1.1\" height=\"%u\" width=\"%u\" >\n"
                              @" <path fill=\"none\" stroke=\"#%02X%02X%02X\" stroke-width=\"%u\" d=\"%@\" />\n"
@@ -215,7 +207,7 @@
                         toPoint:(CGPoint)toPoint image:(UIImage *)image {
     
     CGSize screenSize = self.frame.size;
-    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);
@@ -244,7 +236,7 @@
     
     CGSize screenSize = self.frame.size;
     
-    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);

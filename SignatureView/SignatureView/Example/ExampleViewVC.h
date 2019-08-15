@@ -11,7 +11,9 @@
 @class SignatureView;
 
 @interface ExampleViewVC : UIViewController
+@property (weak, nonatomic) IBOutlet UIImageView *image;
 
 @property (nonatomic, weak) IBOutlet SignatureView *signatureView;
+- (IBAction)btnTouched:(id)sender;
 
 @end

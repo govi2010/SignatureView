@@ -46,6 +46,7 @@
     
     [self _setupDefaultValues];
     [self _initializeRecognizer];
+   
 }
 
 - (void)_setupDefaultValues {
@@ -71,6 +72,9 @@
 - (void)setLineWidth:(CGFloat)width {
     self.backgroundLineWidth = width;
     self.foregroundLineWidth = width;
+}
+- (void)setBackgroundColor:(UIColor *)backgroundColor{
+    self.backgroundColor = backgroundColor;
 }
 
 - (void)clear {
@@ -202,7 +206,7 @@
                         toPoint:(CGPoint)toPoint image:(UIImage *)image {
     
     CGSize screenSize = self.frame.size;
-    if (UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);
@@ -231,7 +235,7 @@
     
     CGSize screenSize = self.frame.size;
     
-    if (UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);

@@ -20,6 +20,7 @@
 
 - (void)setLineColor:(UIColor *)color;
 - (void)setLineWidth:(CGFloat)width;
+- (void)setBackgroundColor:(UIColor *)backgroundColor;
 
 - (void)clear;
 - (void)clearWithColor:(UIColor *)color;

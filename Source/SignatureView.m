@@ -82,9 +82,10 @@
     self.backGroundImage = backgroundImage;
     UIGraphicsBeginImageContext(self.frame.size);
     [backgroundImage drawInRect:self.bounds];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *image1 = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    self.image = image;//[UIColor colorWithPatternImage:image];
+//     self.image = image;//[UIColor colorWithPatternImage:image];
+    self.backgroundColor = [UIColor colorWithPatternImage:image1];
 }
 
 - (void)clear {

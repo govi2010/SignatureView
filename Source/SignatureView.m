@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSMutableArray *drawnPoints;
 @property (nonatomic, assign) CGPoint previousPoint;
 @property (nonatomic, strong) UIImage *tempImage;
+@property (nonatomic) UIImage *backGroundImageC;
 
 
 @property (nonatomic, assign) BOOL blank;
@@ -22,6 +23,7 @@
 @end
 
 @implementation SignatureView
+@synthesize backGroundImageC = _backGroundImageC;  //Must do this
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -79,12 +81,15 @@
 }
 
 - (void)setBackgroundImage:(UIImage *)backgroundImage{
-    self.backGroundImage = backgroundImage;
-    UIGraphicsBeginImageContext(self.frame.size);
-    [backgroundImage drawInRect:self.bounds];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    self.backGroundImageC = backgroundImage;
+    CGImageRef newCgIm = CGImageCreateCopy(backgroundImage.CGImage);
+    UIImage *newImage = [UIImage imageWithCGImage:newCgIm scale:backgroundImage.scale orientation:backgroundImage.imageOrientation];
+
+//    UIGraphicsBeginImageContext(self.frame.size);
+//    [backgroundImage drawInRect:self.bounds];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    self.image = image;//[UIColor colorWithPatternImage:image];
+    self.image = newImage;//[UIColor colorWithPatternImage:image];
     //self.backgroundColor = [UIColor colorWithPatternImage:image1];
 }
 
@@ -96,14 +101,16 @@
 - (void)clearWithColor:(UIColor *)color {
     self.blank = YES;
     [self.svgPath setString:@""];
-    CGSize screenSize = self.frame.size;
-    UIGraphicsBeginImageContext(screenSize);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    [self.image drawInRect:CGRectMake(0, 0, screenSize.width, screenSize.height)];
-    CGContextSetFillColorWithColor(context, color.CGColor);
-    CGContextFillRect(context, CGRectMake(0, 0, screenSize.width, screenSize.height));
-    UIImage *cleanImage = UIGraphicsGetImageFromCurrentImageContext();
-    self.image = cleanImage;
+//    CGSize screenSize = self.frame.size;
+//    UIGraphicsBeginImageContext(screenSize);
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    [self.image drawInRect:CGRectMake(0, 0, screenSize.width, screenSize.height)];
+//    CGContextSetFillColorWithColor(context, color.CGColor);
+//    CGContextFillRect(context, CGRectMake(0, 0, screenSize.width, screenSize.height));
+//    UIImage *cleanImage = UIGraphicsGetImageFromCurrentImageContext();
+    CGImageRef newCgIm = CGImageCreateCopy(self.backGroundImageC.CGImage);
+    UIImage *newImage = [UIImage imageWithCGImage:newCgIm scale:self.backGroundImageC.scale orientation:self.backGroundImageC.imageOrientation];
+    self.image = newImage;
     UIGraphicsEndImageContext();
 }
 

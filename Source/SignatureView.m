@@ -215,7 +215,7 @@
                         toPoint:(CGPoint)toPoint image:(UIImage *)image {
     
     CGSize screenSize = self.frame.size;
-    if (UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);
@@ -244,7 +244,7 @@
     
     CGSize screenSize = self.frame.size;
     
-    if (UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);

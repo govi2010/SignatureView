@@ -80,7 +80,7 @@
     self.backgroundColor = backgroundColor;
 }
 
-- (void)setBackgroundImage:(UIImage *)backgroundImage{
+- (void)setBackgroundImageC:(UIImage *)backgroundImage{
     self.backGroundImageC = backgroundImage;
     CGImageRef newCgIm = CGImageCreateCopy(backgroundImage.CGImage);
     UIImage *newImage = [UIImage imageWithCGImage:newCgIm scale:backgroundImage.scale orientation:backgroundImage.imageOrientation];

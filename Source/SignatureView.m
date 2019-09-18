@@ -13,7 +13,6 @@
 @property (nonatomic, strong) NSMutableArray *drawnPoints;
 @property (nonatomic, assign) CGPoint previousPoint;
 @property (nonatomic, strong) UIImage *tempImage;
-@property (nonatomic) UIImage *backGroundImageC;
 
 
 @property (nonatomic, assign) BOOL blank;
@@ -23,7 +22,6 @@
 @end
 
 @implementation SignatureView
-@synthesize backGroundImageC = _backGroundImageC;  //Must do this
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -80,17 +78,14 @@
     self.backgroundColor = backgroundColor;
 }
 
-- (void)setBackgroundImageC:(UIImage *)backgroundImage{
-    self.backGroundImageC = backgroundImage;
-    CGImageRef newCgIm = CGImageCreateCopy(backgroundImage.CGImage);
-    UIImage *newImage = [UIImage imageWithCGImage:newCgIm scale:backgroundImage.scale orientation:backgroundImage.imageOrientation];
-
-//    UIGraphicsBeginImageContext(self.frame.size);
-//    [backgroundImage drawInRect:self.bounds];
-//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+- (void)setBackgroundImage:(UIImage *)backgroundImage{
+    self.backGroundImage = backgroundImage;
+    UIGraphicsBeginImageContext(self.frame.size);
+    [backgroundImage drawInRect:self.bounds];
+    UIImage *image1 = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    self.image = newImage;//[UIColor colorWithPatternImage:image];
-    //self.backgroundColor = [UIColor colorWithPatternImage:image1];
+    //self.image = image;//[UIColor colorWithPatternImage:image];
+    self.backgroundColor = [UIColor colorWithPatternImage:image1];
 }
 
 - (void)clear {
@@ -101,16 +96,14 @@
 - (void)clearWithColor:(UIColor *)color {
     self.blank = YES;
     [self.svgPath setString:@""];
-//    CGSize screenSize = self.frame.size;
-//    UIGraphicsBeginImageContext(screenSize);
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    [self.image drawInRect:CGRectMake(0, 0, screenSize.width, screenSize.height)];
-//    CGContextSetFillColorWithColor(context, color.CGColor);
-//    CGContextFillRect(context, CGRectMake(0, 0, screenSize.width, screenSize.height));
-//    UIImage *cleanImage = UIGraphicsGetImageFromCurrentImageContext();
-    CGImageRef newCgIm = CGImageCreateCopy(self.backGroundImageC.CGImage);
-    UIImage *newImage = [UIImage imageWithCGImage:newCgIm scale:self.backGroundImageC.scale orientation:self.backGroundImageC.imageOrientation];
-    self.image = newImage;
+    CGSize screenSize = self.frame.size;
+    UIGraphicsBeginImageContext(screenSize);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    [self.image drawInRect:CGRectMake(0, 0, screenSize.width, screenSize.height)];
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context, CGRectMake(0, 0, screenSize.width, screenSize.height));
+    UIImage *cleanImage = UIGraphicsGetImageFromCurrentImageContext();
+    self.image = cleanImage;
     UIGraphicsEndImageContext();
 }
 
@@ -215,7 +208,7 @@
                         toPoint:(CGPoint)toPoint image:(UIImage *)image {
     
     CGSize screenSize = self.frame.size;
-    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);
@@ -244,7 +237,7 @@
     
     CGSize screenSize = self.frame.size;
     
-    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);

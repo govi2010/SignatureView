@@ -84,13 +84,16 @@
     [backgroundImage drawInRect:self.bounds];
     UIImage *image1 = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    //self.image = image;//[UIColor colorWithPatternImage:image];
-    self.backgroundColor = [UIColor colorWithPatternImage:image1];
+    self.image = image1;//[UIColor colorWithPatternImage:image];
+    //self.backgroundColor = [UIColor colorWithPatternImage:image1];
 }
 
 - (void)clear {
     [self clearWithColor:[UIColor whiteColor]];
     [self clearWithColor:[UIColor clearColor]];
+    UIImage* newImage = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef _Nonnull)(self.backGroundImage)];
+
+    self.image = newImage;
 }
 
 - (void)clearWithColor:(UIColor *)color {

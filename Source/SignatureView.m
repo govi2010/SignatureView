@@ -14,7 +14,10 @@
 @property (nonatomic, assign) CGPoint previousPoint;
 @property (nonatomic, strong) UIImage *tempImage;
 
+
 @property (nonatomic, assign) BOOL blank;
+
+@property (nonatomic, retain) NSMutableString *svgPath;
 
 @end
 
@@ -40,9 +43,11 @@
     
     self.userInteractionEnabled = YES;
     self.blank = YES;
+    self.svgPath = [[NSMutableString alloc] init];
     
     [self _setupDefaultValues];
     [self _initializeRecognizer];
+   
 }
 
 - (void)_setupDefaultValues {
@@ -69,28 +74,39 @@
     self.backgroundLineWidth = width;
     self.foregroundLineWidth = width;
 }
+- (void)setBackgroundColor:(UIColor *)backgroundColor{
+    self.backgroundColor = backgroundColor;
+}
+
+- (void)setBackgroundImage:(UIImage *)backgroundImage{
+//    self.backGroundImage = backgroundImage;
+//    UIGraphicsBeginImageContext(self.frame.size);
+//    [backgroundImage drawInRect:self.bounds];
+//    UIImage *image1 = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+    self.image = backgroundImage;//[UIColor colorWithPatternImage:image];
+    //self.backgroundColor = [UIColor colorWithPatternImage:image1];
+}
 
 - (void)clear {
-    self.blank = YES;
-    
-    [self clearWithColor:[UIColor whiteColor]];
-    [self clearWithColor:[UIColor clearColor]];
+//    [self clearWithColor:[UIColor whiteColor]];
+//    [self clearWithColor:[UIColor clearColor]];
+//    UIImage* newImage = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef _Nonnull)(self.backGroundImage)];
+//
+//    self.image = newImage;
 }
 
 - (void)clearWithColor:(UIColor *)color {
+    self.blank = YES;
+    [self.svgPath setString:@""];
     CGSize screenSize = self.frame.size;
-    
     UIGraphicsBeginImageContext(screenSize);
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     [self.image drawInRect:CGRectMake(0, 0, screenSize.width, screenSize.height)];
-    
     CGContextSetFillColorWithColor(context, color.CGColor);
     CGContextFillRect(context, CGRectMake(0, 0, screenSize.width, screenSize.height));
-    
     UIImage *cleanImage = UIGraphicsGetImageFromCurrentImageContext();
     self.image = cleanImage;
-    
     UIGraphicsEndImageContext();
 }
 
@@ -104,6 +120,40 @@
 
 - (NSData *)signatureData {
     return UIImagePNGRepresentation(self.image);
+}
+
+- (NSString *)signatureSvg {
+    const unsigned width = (unsigned)self.bounds.size.width;
+    const unsigned height = (unsigned)self.bounds.size.height;
+    const unsigned strokeWidth = (unsigned)self.backgroundLineWidth;
+    const CGColorSpaceModel colorSpace = CGColorSpaceGetModel(CGColorGetColorSpace(self.backgroundLineColor.CGColor));
+    const CGFloat *colorComponents = CGColorGetComponents(self.backgroundLineColor.CGColor);
+    int r = 0;
+    int g = 0;
+    int b = 0;
+    if (colorSpace == kCGColorSpaceModelMonochrome) {
+        r = (int)(colorComponents[0] * 255);
+        g = (int)(colorComponents[0] * 255);
+        b = (int)(colorComponents[0] * 255);
+    }
+    else if (colorSpace == kCGColorSpaceModelRGB) {
+        r = (int)(colorComponents[0] * 255);
+        g = (int)(colorComponents[1] * 255);
+        b = (int)(colorComponents[2] * 255);
+    }
+    NSString* svgAsString = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n"
+                             @"<svg  xmlns=\"http://www.w3.org/2000/svg\" viewport-fill=\"none\" viewBox=\"0, 0, %u, %u\" version=\"1.1\" height=\"%u\" width=\"%u\" >\n"
+                             @" <path fill=\"none\" stroke=\"#%02X%02X%02X\" stroke-width=\"%u\" d=\"%@\" />\n"
+                             @"</svg>",
+                             width,
+                             height,
+                             height,
+                             width,
+                             r, g, b,
+                             strokeWidth,
+                             [self.svgPath stringByTrimmingCharactersInSet: NSCharacterSet.whitespaceCharacterSet]
+                             ];
+    return svgAsString;
 }
 
 
@@ -208,9 +258,11 @@
     NSInteger count = [points count];
     CGPoint point = [[points objectAtIndex:0] CGPointValue];
 	CGContextMoveToPoint(context, point.x, point.y);
+    [self.svgPath appendFormat:@" M%.1lf %.1lf", point.x, point.y];
     for(int i = 1; i < count; i++) {
         point = [[points objectAtIndex:i] CGPointValue];
         CGContextAddLineToPoint(context, point.x, point.y);
+        [self.svgPath appendFormat:@" L%.1lf %.1lf", point.x, point.y];
     }
     CGContextStrokePath(context);
     

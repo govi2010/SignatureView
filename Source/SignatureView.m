@@ -79,21 +79,21 @@
 }
 
 - (void)setBackgroundImage:(UIImage *)backgroundImage{
-    self.backGroundImage = backgroundImage;
-    UIGraphicsBeginImageContext(self.frame.size);
-    [backgroundImage drawInRect:self.bounds];
-    UIImage *image1 = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    self.image = image1;//[UIColor colorWithPatternImage:image];
+//    self.backGroundImage = backgroundImage;
+//    UIGraphicsBeginImageContext(self.frame.size);
+//    [backgroundImage drawInRect:self.bounds];
+//    UIImage *image1 = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+    self.image = backgroundImage;//[UIColor colorWithPatternImage:image];
     //self.backgroundColor = [UIColor colorWithPatternImage:image1];
 }
 
 - (void)clear {
-    [self clearWithColor:[UIColor whiteColor]];
-    [self clearWithColor:[UIColor clearColor]];
-    UIImage* newImage = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef _Nonnull)(self.backGroundImage)];
-
-    self.image = newImage;
+//    [self clearWithColor:[UIColor whiteColor]];
+//    [self clearWithColor:[UIColor clearColor]];
+//    UIImage* newImage = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef _Nonnull)(self.backGroundImage)];
+//
+//    self.image = newImage;
 }
 
 - (void)clearWithColor:(UIColor *)color {

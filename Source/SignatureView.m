@@ -89,11 +89,8 @@
 }
 
 - (void)clear {
-//    [self clearWithColor:[UIColor whiteColor]];
-//    [self clearWithColor:[UIColor clearColor]];
-//    UIImage* newImage = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef _Nonnull)(self.backGroundImage)];
-//
-//    self.image = newImage;
+    [self clearWithColor:[UIColor whiteColor]];
+    [self clearWithColor:[UIColor clearColor]];
 }
 
 - (void)clearWithColor:(UIColor *)color {

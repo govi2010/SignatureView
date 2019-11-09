@@ -74,18 +74,9 @@
     self.backgroundLineWidth = width;
     self.foregroundLineWidth = width;
 }
-- (void)setBackgroundColor:(UIColor *)backgroundColor{
-    self.backgroundColor = backgroundColor;
-}
 
 - (void)setBackgroundImage:(UIImage *)backgroundImage{
-//    self.backGroundImage = backgroundImage;
-//    UIGraphicsBeginImageContext(self.frame.size);
-//    [backgroundImage drawInRect:self.bounds];
-//    UIImage *image1 = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
     self.image = backgroundImage;//[UIColor colorWithPatternImage:image];
-    //self.backgroundColor = [UIColor colorWithPatternImage:image1];
 }
 
 - (void)clear {
@@ -94,17 +85,39 @@
 }
 
 - (void)clearWithColor:(UIColor *)color {
-    self.blank = YES;
-    [self.svgPath setString:@""];
-    CGSize screenSize = self.frame.size;
-    UIGraphicsBeginImageContext(screenSize);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    [self.image drawInRect:CGRectMake(0, 0, screenSize.width, screenSize.height)];
-    CGContextSetFillColorWithColor(context, color.CGColor);
-    CGContextFillRect(context, CGRectMake(0, 0, screenSize.width, screenSize.height));
-    UIImage *cleanImage = UIGraphicsGetImageFromCurrentImageContext();
-    self.image = cleanImage;
-    UIGraphicsEndImageContext();
+  self.blank = YES;
+  [self.svgPath setString:@""];
+  CGImageRef rawImageRef=self.image.CGImage;
+  const CGFloat colorMasking[6] = {222, 255, 222, 255, 222, 255};
+  CGSize screenSize = self.frame.size;
+  UIGraphicsBeginImageContext(screenSize);
+  CGImageRef maskedImageRef=CGImageCreateWithMaskingColors(rawImageRef, colorMasking);
+  {
+      //if in iphone
+      CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0.0, screenSize.height);
+      CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1.0, -1.0);
+  }
+  CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, screenSize.width, screenSize.height), maskedImageRef);
+  UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
+  CGImageRelease(maskedImageRef);
+  UIGraphicsEndImageContext();
+  self.image = result;
+    
+    
+//  CGSize screenSize = self.frame.size;
+//
+//  UIGraphicsBeginImageContext(screenSize);
+//
+//  CGContextRef context = UIGraphicsGetCurrentContext();
+//  [self.image drawInRect:CGRectMake(0, 0, screenSize.width, screenSize.height)];
+//
+//  CGContextSetFillColorWithColor(context, color.CGColor);
+//  CGContextFillRect(context, CGRectMake(0, 0, screenSize.width, screenSize.height));
+//
+//  UIImage *cleanImage = UIGraphicsGetImageFromCurrentImageContext();
+//  self.image = cleanImage;
+//
+//  UIGraphicsEndImageContext();
 }
 
 - (BOOL)isSigned {
@@ -208,7 +221,7 @@
                         toPoint:(CGPoint)toPoint image:(UIImage *)image {
     
     CGSize screenSize = self.frame.size;
-    if (UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);
@@ -237,7 +250,7 @@
     
     CGSize screenSize = self.frame.size;
     
-    if (UIGraphicsBeginImageContextWithOptions != NULL) {
+    if (&UIGraphicsBeginImageContextWithOptions != NULL) {
         UIGraphicsBeginImageContextWithOptions(screenSize, NO, 0.0);
     } else {
         UIGraphicsBeginImageContext(screenSize);
